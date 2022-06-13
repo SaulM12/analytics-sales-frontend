@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Button from '@mui/material/Button';
 import styles from './login.module.css';
 import styles2 from './register.module.css';
+import { AccessAlarm } from '@mui/icons-material';
 
 function login() {
     return (
@@ -13,6 +14,7 @@ function login() {
             <Button variant="outlined" href="/register">
                 fasfsdf
             </Button>
+            <AccessAlarm />
         </div>
     )
 }
