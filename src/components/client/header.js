@@ -1,4 +1,4 @@
-import { Button, Grid, IconButton, Typography } from '@mui/material'
+import { Grid, IconButton, Typography } from '@mui/material'
 import React from 'react'
 import headerStyles from './header.module.css'
 import LocalGroceryStoreOutlinedIcon from '@mui/icons-material/LocalGroceryStoreOutlined';
@@ -16,9 +16,7 @@ function Header() {
         </Grid>
         <Grid item xs={8} md={8}>
           <nav className={headerStyles.actions__container}>
-            <Button className={headerStyles.header__button}>Botón</Button>
-            <Button className={headerStyles.header__button}>Botón2</Button>
-            <Button className={headerStyles.header__button}>Botón3</Button>
+           
           </nav>
         </Grid>
         <Grid item xs={4} md={2}>
