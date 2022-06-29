@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const generateSale = ({ id }) => {
     const detailUrl = getApiUrl(`saleDetail/${id}`)
-    axios.post(saleUrl, product, { withCredentials: true })
+    axios.post(detailUrl, product, { withCredentials: true })
         .then(response => {
             console.log(response.data.message)
         })
