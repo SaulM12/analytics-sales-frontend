@@ -6,6 +6,9 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
+import { submitRegister } from '../services/auth';
+import { Alert } from '@mui/material';
+
 function Register() {
 
   const [registerData, setRegisterData] = useState({
@@ -14,18 +17,14 @@ function Register() {
     password: ""
   })
 
+  const [wrongData, setWrongData] = useState({
+    status: false,
+    infoText: ''
+  })
   const handleRegister = e => {
     const tempData = { ...registerData }
     tempData[e.target.id] = e.target.value
     setRegisterData(tempData)
-  }
-
-  const register = () => {
-    axios.post('http://localhost:8090/auth/register', registerData)
-    .then(response => console.log(response.data.message))
-    .catch(error =>{
-      console.log(error.response.data.message);
-    })
   }
 
   return (
@@ -43,13 +42,18 @@ function Register() {
             <TextField id="userName" onChange={e => handleRegister(e)} value={registerData.userName} label="Nombre" variant="filled" />
             <TextField id="email" onChange={e => handleRegister(e)} value={registerData.email} label="Email" variant="filled" />
             <TextField id="password" onChange={e => handleRegister(e)} value={registerData.password} label="Contraseña" variant="filled" />
-            <Button variant="contained" className={registerStyles.button} onClick={register}>
+            <Button
+              variant="contained"
+              className={registerStyles.button}
+              onClick={() => submitRegister({ registerData, setWrongData })}>
               Registrarse
             </Button>
             <Button variant="text" href="/">
               Iniciar Sesión
             </Button>
-
+            {wrongData.status
+              ? <Alert severity="error">{wrongData.infoText}</Alert>
+              : <Alert severity="success">{wrongData.infoText}, inicia sesión para continuar</Alert>}
           </Stack>
         </form>
       </Stack>

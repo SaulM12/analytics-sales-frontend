@@ -5,27 +5,14 @@ import BubbleChartSharpIcon from '@mui/icons-material/BubbleChartSharp';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
-import axios from 'axios';
+import { submitLogin } from '../services/auth';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
-    const [loginData, setLoginData] = useState({
-        email: "",
-        password: ""
-    })
-    const [send, setSend] = useState(false)
     var navigate = useNavigate()
-
-    const login = () => {
-        axios.post('http://localhost:8090/auth/login', loginData, { withCredentials: true })
-            .then(response => console.log(response.data.message))
-            .catch(error => {
-                setSend(true)
-                console.log(error.response.data.message);
-            })
-    }
-
+    const [loginData, setLoginData] = useState({ email: "", password: "" })
+    const [wrongCredentials, setWrongCredentials] = useState({ wrongData: false, infoText: '', })
     const handleLogin = e => {
         const tempData = { ...loginData }
         tempData[e.target.id] = e.target.value
@@ -46,13 +33,16 @@ function Login() {
                         onChange={e => handleLogin(e)} />
                     <TextField id="password" type='password' label="Contraseña" variant="filled" value={loginData.password}
                         onChange={e => handleLogin(e)} />
-                    <Button variant="contained" className={loginStyles.button} onClick={login}>
+                    <Button
+                        variant="contained"
+                        className={loginStyles.button}
+                        onClick={() => submitLogin({ loginData, setWrongCredentials, navigate })}>
                         Iniciar Sesión
                     </Button>
                     <Button variant="text" href="/register" >
                         Registrarse
                     </Button>
-                    {send ? <Alert severity="error">Revise sus crendenciales!</Alert> : null}
+                    {wrongCredentials.wrongData && <Alert severity="error">{wrongCredentials.infoText}</Alert>}
                 </Stack>
             </Stack>
         </div>
