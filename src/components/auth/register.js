@@ -5,9 +5,8 @@ import BubbleChartSharpIcon from '@mui/icons-material/BubbleChartSharp';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import { submitRegister } from '../services/auth';
-import { Alert } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 
 function Register() {
 
@@ -17,8 +16,10 @@ function Register() {
     password: ""
   })
 
+  const [open, setOpen] = useState(false);
+
   const [wrongData, setWrongData] = useState({
-    status: false,
+    status: null,
     infoText: ''
   })
   const handleRegister = e => {
@@ -26,7 +27,16 @@ function Register() {
     tempData[e.target.id] = e.target.value
     setRegisterData(tempData)
   }
-
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  const register=()=>{
+    setOpen(true)
+    submitRegister({ registerData, setWrongData, setRegisterData })
+  }
   return (
     <div className={registerStyles.container}>
       <Stack spacing={2} className={registerStyles.card} alignItems="center" justifyContent="space-evenly">
@@ -45,15 +55,18 @@ function Register() {
             <Button
               variant="contained"
               className={registerStyles.button}
-              onClick={() => submitRegister({ registerData, setWrongData })}>
+              onClick={register}>
               Registrarse
             </Button>
             <Button variant="text" href="/">
               Iniciar Sesión
             </Button>
-            {wrongData.status
-              ? <Alert severity="error">{wrongData.infoText}</Alert>
-              : <Alert severity="success">{wrongData.infoText}, inicia sesión para continuar</Alert>}
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
+              <Alert onClose={handleClose} severity={wrongData.status ? "error" : "success"} a sx={{ width: '100%' }}>
+                {wrongData.status ? wrongData.infoText : "Inicia sesión para continuar"}
+              </Alert>
+            </Snackbar>
           </Stack>
         </form>
       </Stack>

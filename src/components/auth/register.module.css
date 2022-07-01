@@ -8,8 +8,9 @@
     align-items: center;
 }
 .card{
-    height: 70vh;
-    padding: 3rem;
+    
+    padding: 1rem 3rem 1rem 3rem;
+    max-width: 210px!important;
     background-color: rgba(255, 255, 255, 0.712);
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }

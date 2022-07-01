@@ -64,7 +64,7 @@ function Home() {
         </Grid>
         <Grid item xs={6} sm={6} md={6} lg={3}>
           <div className={homeStyles.card__container}>
-            <div className={homeStyles.card} onClick={openDetail}>
+            <div className={homeStyles.card}>
               <div className={homeStyles.price}>
                 <Typography variant="p" fontWeight={400} component="article" >
                   Detalles
@@ -116,7 +116,7 @@ function Home() {
           {
             products.map(product =>
               <SwiperSlide key={product.key}>
-                <div className={homeStyles.product__card} style={selectedProductStyle(product.key)}>
+                <div className={homeStyles.product__card} style={selectedProductStyle(product.key)} onClick={openDetail}>
                   <Stack direction="column" justifyContent="start" alignItems="center" spacing={1}>
                     <div className={homeStyles.product__image__container}>
                       <img alt='sd' src={product.image}
