@@ -5,7 +5,6 @@ import BubbleChartSharpIcon from '@mui/icons-material/BubbleChartSharp';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import { submitRegister } from '../services/auth';
 import { Alert } from '@mui/material';
 
