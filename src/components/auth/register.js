@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import registerStyles from './register.module.css';
 import Button from '@mui/material/Button';
-import BubbleChartSharpIcon from '@mui/icons-material/BubbleChartSharp';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { submitRegister } from '../services/auth';
 import { Alert, Snackbar } from '@mui/material';
-
+import LocalMallIcon from '@mui/icons-material/LocalMall';
 function Register() {
 
   const [registerData, setRegisterData] = useState({
@@ -41,7 +40,7 @@ function Register() {
     <div className={registerStyles.container}>
       <Stack spacing={2} className={registerStyles.card} alignItems="center" justifyContent="space-evenly">
         <Stack spacing={0} alignItems="center" justifyContent="center" direction="column">
-          <BubbleChartSharpIcon sx={{ fontSize: 100 }} color="primary" />
+          <LocalMallIcon sx={{ fontSize: 100 }} color="primary" />
           <Typography variant="h4" fontWeight={600} component="div" >
             Registro
           </Typography>
