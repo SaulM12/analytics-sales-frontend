@@ -56,7 +56,7 @@ function ProductDetail() {
             <Divider orientation="vertical" flexItem />
             <Grid item xs={0} sm={0} md={4} lg={4} >
                 <div className={detailStyle.side}>
-                <Chip icon={<ClassIcon />} label="Categoria" className={detailStyle.chip}/>
+                    <Chip icon={<ClassIcon />} label="Categoria" className={detailStyle.chip} />
                     {
                         products.map(product =>
 

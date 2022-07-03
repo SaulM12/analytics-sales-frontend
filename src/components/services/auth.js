@@ -7,9 +7,9 @@ export const submitLogin = (props) => {
     const userDetailsUrl = getApiUrl('auth/userDetails')
     axios.post(loginUrl, loginData, { withCredentials: true })
         .then(() => {
-            axios.get(userDetailsUrl,{withCredentials:true }).then(userDetails=>{
-                let userRole=userDetails.data.roles[0].roleName
-                navigate(userRole==='ROLE_ADMIN'?'/admin':'/store', { replace: true })
+            axios.get(userDetailsUrl, { withCredentials: true }).then(userDetails => {
+                let userRole = userDetails.data.roles[0].roleName
+                navigate(userRole === 'ROLE_ADMIN' ? '/admin' : '/store', { replace: true })
             })
         })
         .catch(error => {
@@ -21,11 +21,7 @@ export const submitRegister = (props) => {
     const { registerData, setWrongData, setRegisterData, setOpen } = props;
     const registerUrl = getApiUrl('auth/register')
     axios.post(registerUrl, registerData).then(response => {
-        setRegisterData({
-            userName: "",
-            email: "",
-            password: ""
-        })
+        setRegisterData({ userName: "", email: "", password: "" })
         setWrongData({ status: false, infoText: response.data.message })
         setOpen(true)
     }).catch(error => {
@@ -33,16 +29,16 @@ export const submitRegister = (props) => {
         setOpen(true)
     })
 }
-export const getUserDetails = ({setUserName}) =>{
+export const getUserDetails = ({ setUserName }) => {
     const userDetailsUrl = getApiUrl('auth/userDetails')
-    axios.get(userDetailsUrl,{withCredentials:true }).then(userDetails=>{
+    axios.get(userDetailsUrl, { withCredentials: true }).then(userDetails => {
         setUserName(userDetails.data.userName)
     })
 }
-export const logout = ({navigate})=>{
-    const logoutUrl=getApiUrl('auth/logout')
-    axios.get(logoutUrl,{withCredentials:true}).then(()=>{
-         navigate('/', { replace: true })
+export const logout = ({ navigate }) => {
+    const logoutUrl = getApiUrl('auth/logout')
+    axios.get(logoutUrl, { withCredentials: true }).then(() => {
+        navigate('/', { replace: true })
     })
 
 }

@@ -27,7 +27,7 @@ export const updateProduct = ({ product, id }) => {
         })
 }
 
-export const getProuctById = ({ productId }) => {
+export const getProductById = ({ productId }) => {
     const productUrl = getApiUrl(`product/${productId}`)
     axios.get(productUrl, { withCredentials: true })
         .then(response => {
@@ -36,4 +36,30 @@ export const getProuctById = ({ productId }) => {
         .catch(error => {
             console.log(error.response.data.message);
         })
+}
+
+export const getAllProducts = async () => {
+    const productUrl = getApiUrl(`product/getAll`)
+    const response = await axios.get(productUrl, { withCredentials: true });
+    return response.data;
+}
+
+export const getProductsOrderByLessPrice = async () => {
+    const productUrl = getApiUrl(`product/orderByPrice`)
+    const response = await axios.get(productUrl, { withCredentials: true });
+    return response.data;
+}
+
+export const getProductsByCategory = async (categoryName) => {
+    const productUrl = getApiUrl(`product/getByCategory/${categoryName}`)
+    const response = await axios.get(productUrl, { withCredentials: true });
+    return response.data;
+
+}
+
+export const getRelatedProductsByCategory = async (props) => {
+    const { categoryName, productId } = props;
+    const productUrl = getApiUrl(`product/related/${categoryName}/${productId}`)
+    const response = await axios.get(productUrl, { withCredentials: true });
+    return response.data;
 }
