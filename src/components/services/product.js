@@ -1,14 +1,18 @@
 import { getApiUrl } from "./apiConfig";
 import axios from "axios";
 
-export const createProduct = ({ product }) => {
+export const createProduct = (props) => {
+    const { product, setWrongProduct, setProduct, setProductFeedback } = props;
     const productUrl = getApiUrl('product/create')
     axios.post(productUrl, product, { withCredentials: true })
         .then(response => {
-            console.log(response.data.message)
+            setWrongProduct({ status: false, infoText: response.data.message })
+            setProduct({ name: "", price: 0, description: "", category: "", image: "" })
+            setProductFeedback(true)
         })
         .catch(error => {
-            console.log(error.response.data.message);
+            setWrongProduct({ status: true, infoText: error.response.data.message })
+            setProductFeedback(true)
         })
 }
 

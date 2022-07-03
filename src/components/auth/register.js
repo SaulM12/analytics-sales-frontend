@@ -33,8 +33,7 @@ function Register() {
     setOpen(false);
   };
   const register=()=>{
-    setOpen(true)
-    submitRegister({ registerData, setWrongData, setRegisterData })
+    submitRegister({ registerData, setWrongData, setRegisterData,setOpen })
   }
   return (
     <div className={registerStyles.container}>
@@ -60,7 +59,7 @@ function Register() {
             <Button variant="text" href="/">
               Iniciar Sesión
             </Button>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}
+            <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
               <Alert onClose={handleClose} severity={wrongData.status ? "error" : "success"} a sx={{ width: '100%' }}>
                 {wrongData.status ? wrongData.infoText : "Inicia sesión para continuar"}
