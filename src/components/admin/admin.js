@@ -9,8 +9,11 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { createProduct } from '../services/product'
+import { logout } from '../services/auth';
+import { useNavigate } from 'react-router-dom';
 
 function Admin() {
+  var navigate = useNavigate()
   const [product, setProduct] = React.useState({ name: "", price: 0, description: "", category: "", image: "" })
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [wrongProduct, setWrongProduct] = React.useState({ wrongData: false, infoText: '', })
@@ -38,6 +41,9 @@ function Admin() {
   };
   const saveProduct = () => {
     createProduct({ product, setWrongProduct, setProduct,setProductFeedback })
+  }
+  const closeSession = ()=>{
+    logout({navigate})
   }
 
   return (
@@ -119,7 +125,7 @@ function Admin() {
             </Button>
           </label>
           <Button
-            variant="outlined" color="secondary" endIcon={<LogoutIcon />}>
+            variant="outlined" color="secondary" endIcon={<LogoutIcon />} onClick={closeSession}>
             Salir
           </Button>
         </nav>

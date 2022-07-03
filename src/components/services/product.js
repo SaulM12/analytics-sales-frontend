@@ -27,15 +27,10 @@ export const updateProduct = ({ product, id }) => {
         })
 }
 
-export const getProductById = ({ productId }) => {
-    const productUrl = getApiUrl(`product/${productId}`)
-    axios.get(productUrl, { withCredentials: true })
-        .then(response => {
-            console.log(response.data.message)
-        })
-        .catch(error => {
-            console.log(error.response.data.message);
-        })
+export const getProductById = async (id) => {
+    const productUrl = getApiUrl(`product/${id}`)
+    const response = await axios.get(productUrl, { withCredentials: true })
+    return response.data
 }
 
 export const getAllProducts = async () => {
@@ -58,8 +53,9 @@ export const getProductsByCategory = async (categoryName) => {
 }
 
 export const getRelatedProductsByCategory = async (props) => {
-    const { categoryName, productId } = props;
-    const productUrl = getApiUrl(`product/related/${categoryName}/${productId}`)
-    const response = await axios.get(productUrl, { withCredentials: true });
-    return response.data;
+    const { category, id } = props;
+    const productUrl = getApiUrl(`product/related/${category}/${id}`)
+    const response = await axios.get(productUrl, { withCredentials: true })
+    return response.data
+
 }

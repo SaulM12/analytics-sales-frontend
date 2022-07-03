@@ -9,26 +9,19 @@ import "swiper/css/bundle";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import { getProductsOrderByLessPrice, getProductsByCategory } from '../services/product';
-function Home() {
 
+function Home() {
   var [index, setIndex] = useState(0)
   const [productsLessPrice, setProductsLessPrice] = useState([])
   const [productsCategoryOne, setProductsCategoryOne] = useState([])
   const [productsCategoryTwo, setProductsCategoryTwo] = useState([])
-
-  var products = [{ key: 0, name: 'Product 1', cost: 20.00, image: 'https://cdn-icons-png.flaticon.com/512/992/992747.png' },
-  { key: 1, name: 'Product 2', cost: 20.00, image: 'https://cdn-icons.flaticon.com/png/512/2745/premium/2745070.png?token=exp=1655605058~hmac=0e2d78823b47daa001cb071a45ed06fd' },
-  { key: 2, name: 'Product 3', cost: 12.00, image: 'https://cdn-icons-png.flaticon.com/512/920/920551.png' },
-  { key: 3, name: 'Product 4', cost: 5.00, image: 'https://cdn-icons-png.flaticon.com/512/859/859293.png' },
-  { key: 4, name: 'Product 5', cost: 2.00, image: 'https://icon-library.com/images/products-icon-png/products-icon-png-6.jpg' },]
-
   useEffect(() => {
     let shouldUpdate = true;
     if (shouldUpdate) {
       Promise.all([
         getProductsOrderByLessPrice(),
-        getProductsByCategory("bebidas"),
-        getProductsByCategory("ropa")
+        getProductsByCategory("Frutas"),
+        getProductsByCategory("Ropa")
       ]).then(results => {
         const [first, second, third] = results;
         setProductsLessPrice(first)
@@ -65,19 +58,17 @@ function Home() {
     }
   }
   var navigate = useNavigate()
-  const openDetail = () => {
-    return navigate("/store/detail", { replace: false })
-  }
+
   return (
     <div className={homeStyles.container}>
       <Grid container direction="row" justifyContent="center" alignItems="center" className={homeStyles.banner}>
         <Grid item sm={4} md={8} lg={4}>
           <Stack spacing={2} alignItems="flex-start" textAlign={'left'} justifyContent="center">
             <Typography variant="h2" fontWeight={700} component="h2" className={homeStyles.main__text}>
-              Smothies to make your day smooth
+              {productsLessPrice.length && productsLessPrice[index].name}
             </Typography>
             <Typography variant="p" fontWeight={400} component="article" >
-              Discover local on demand delivery or Pickup from nearby restaurantes
+              {productsLessPrice.length && productsLessPrice[index].description}
             </Typography>
             <Button variant="contained">Añadir al carrito</Button>
           </Stack>
@@ -99,7 +90,7 @@ function Home() {
                   ${productsLessPrice.length && productsLessPrice[index].price}
                 </Typography>
                 <Typography variant="h5" fontWeight={500} component="article" >
-                  <LabelIcon />Bebidas
+                  <LabelIcon />{productsLessPrice.length && productsLessPrice[index].category}
                 </Typography>
               </div>
               <div className={homeStyles.card__action}>
@@ -142,7 +133,7 @@ function Home() {
           {
             productsLessPrice.map((product, index) =>
               <SwiperSlide key={index}>
-                <div className={homeStyles.product__card} style={selectedProductStyle(index)} onClick={openDetail}>
+                <div className={homeStyles.product__card} style={selectedProductStyle(index)} onClick={()=>{navigate("/store/detail/"+product.id+"/"+product.category, { replace: false })}}>
                   <Stack direction="column" justifyContent="start" alignItems="center" spacing={1}>
                     <div className={homeStyles.product__image__container}>
                       <img alt='sd' src={product.image}
