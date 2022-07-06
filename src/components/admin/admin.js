@@ -8,7 +8,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { createProduct } from '../services/product'
+import { createProduct, uploadCsvFile } from '../services/product'
 import { logout } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,37 +17,64 @@ function Admin() {
   const [product, setProduct] = React.useState({ name: "", price: 0, description: "", category: "", image: "" })
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [wrongProduct, setWrongProduct] = React.useState({ wrongData: false, infoText: '', })
-  const open = Boolean(anchorEl);
+  const [showProductFeedback, setProductFeedback] = React.useState(false)
   const [openModal, setOpenModal] = React.useState(false);
+  const [showAlert, setShowAlert] = React.useState({ show: false, message: '', severity: 'success' });
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
-  const [showProductFeedback, setProductFeedback] = React.useState(false);
+  const open = Boolean(anchorEl);
+
   const handleProductForm = e => {
     const tempData = { ...product }
     tempData[e.target.id] = e.target.value
     setProduct(tempData)
   }
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const closeProductFeedback = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
     setProductFeedback(false);
   };
+
   const saveProduct = () => {
-    createProduct({ product, setWrongProduct, setProduct,setProductFeedback })
+    createProduct({ product, setWrongProduct, setProduct, setProductFeedback })
   }
-  const closeSession = ()=>{
-    logout({navigate})
+  const closeSession = () => {
+    logout({ navigate })
   }
 
+  const uploadFile = async (e) => {
+    let file = e.target.files
+    let document = new FormData()
+    document.append('file', file[0])
+    const response = await uploadCsvFile(document);
+    if (response) {
+      let alertColor = response.status === 200 ? 'success' : 'error'
+      setShowAlert({ show: true, message: response.data.message, severity: alertColor })
+    }
+    e.target.value = null
+  }
+
+  const closeAlert = () => {
+    setShowAlert(false)
+  }
   return (
     <div className={adminStyles.container}>
+      <Snackbar open={showAlert.show} autoHideDuration={3000} onClose={closeAlert}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
+        <Alert onClose={closeAlert} severity={showAlert.severity} a sx={{ width: '100%' }}>
+          {showAlert.message}
+        </Alert>
+      </Snackbar>
       <div className={adminStyles.topBar}>
         <div className={adminStyles.topBar__title}>
           <Typography variant="h4" fontWeight={700} component="h2" >
@@ -118,11 +145,13 @@ function Admin() {
             </MenuItem>
           </Menu>
           <label htmlFor="contained-button-file">
-            <Input accept="image/*" id="contained-button-file" multiple type="file" className={adminStyles.input} />
+            <Input accept="image/*" id="contained-button-file" multiple type="file" className={adminStyles.input}
+              onChange={e => uploadFile(e)} />
             <Button variant="outlined" component="span"
               endIcon={<UploadFileIcon />} className={adminStyles.actions}>
               Subir CSV
             </Button>
+
           </label>
           <Button
             variant="outlined" color="secondary" endIcon={<LogoutIcon />} onClick={closeSession}>

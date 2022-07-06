@@ -59,3 +59,13 @@ export const getRelatedProductsByCategory = async (props) => {
     return response.data
 
 }
+
+export const uploadCsvFile = async (file) => {
+    try {
+        const productUrl = getApiUrl(`product/uploadCsv`)
+        const response = await axios.post(productUrl, file, { withCredentials: true })
+        return response
+    } catch (error) {
+        return error.response
+    }
+}

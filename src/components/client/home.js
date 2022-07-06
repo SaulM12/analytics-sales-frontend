@@ -19,8 +19,8 @@ function Home() {
     if (shouldUpdate) {
       Promise.all([
         getProductsOrderByLessPrice(),
-        getProductsByCategory("Frutas"),
-        getProductsByCategory("Ropa")
+        getProductsByCategory("Ropa"),
+        getProductsByCategory("Tecnología")
       ]).then(results => {
         const [first, second, third] = results;
         setProductsLessPrice(first)
