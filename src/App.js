@@ -6,6 +6,7 @@ import Home from './components/client/home'
 import Client from './components/client/client'
 import ProductDetail from './components/client/productDetail';
 import Admin from './components/admin/admin'
+import ShoppingList from './components/client/shoppingList';
 function App() {
   return (
     <Routes>
@@ -14,6 +15,7 @@ function App() {
       <Route path="store" element={<Client />}>
         <Route path="" element={<Home />} />
         <Route path="detail/:id/:category" element={<ProductDetail />} />
+        <Route path="shopping/:id" element={<ShoppingList />} />
       </Route>
       <Route path="admin" element={<Admin />} />
     </Routes>

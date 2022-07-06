@@ -7,9 +7,8 @@ import LabelIcon from '@mui/icons-material/Label';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import "swiper/css/bundle";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { useNavigate } from 'react-router-dom';
 import { getProductsOrderByLessPrice, getProductsByCategory } from '../services/product';
-
+import { addToCart } from '../services/detail';
 function Home() {
   var [index, setIndex] = useState(0)
   const [productsLessPrice, setProductsLessPrice] = useState([])
@@ -36,7 +35,7 @@ function Home() {
     }
   }, [])
 
-  function selectedProductStyle(key) {
+  const selectedProductStyle = (key) => {
     if (key === index) {
       return {
         backgroundColor: '#dcf0ff'
@@ -57,20 +56,24 @@ function Home() {
       swiper.slidePrev()
     }
   }
-  var navigate = useNavigate()
-
+  const addProduct = (amountToAdd, productToAdd) => {
+    addToCart({ amountToAdd, productToAdd })
+  }
   return (
     <div className={homeStyles.container}>
       <Grid container direction="row" justifyContent="center" alignItems="center" className={homeStyles.banner}>
         <Grid item sm={4} md={8} lg={4}>
           <Stack spacing={2} alignItems="flex-start" textAlign={'left'} justifyContent="center">
             <Typography variant="h2" fontWeight={700} component="h2" className={homeStyles.main__text}>
+              Productos destacados
+            </Typography>
+            <Typography variant="h4" fontWeight={400} component="article" >
               {productsLessPrice.length && productsLessPrice[index].name}
             </Typography>
-            <Typography variant="p" fontWeight={400} component="article" >
-              {productsLessPrice.length && productsLessPrice[index].description}
-            </Typography>
-            <Button variant="contained">Añadir al carrito</Button>
+            <Button variant="contained" onClick={() => {
+              addProduct(1, productsLessPrice[index])
+            }}>
+              Añadir al carrito</Button>
           </Stack>
         </Grid>
         <Grid item xs={6} sm={6} md={4} lg={4}>
@@ -87,7 +90,7 @@ function Home() {
                   Detalles
                 </Typography>
                 <Typography variant="h3" fontWeight={600} component="article" className={homeStyles.main__text}>
-                  ${productsLessPrice.length && productsLessPrice[index].price}
+                  ${productsLessPrice.length && productsLessPrice[index].price.toFixed(2)}
                 </Typography>
                 <Typography variant="h5" fontWeight={500} component="article" >
                   <LabelIcon />{productsLessPrice.length && productsLessPrice[index].category}
@@ -133,7 +136,12 @@ function Home() {
           {
             productsLessPrice.map((product, index) =>
               <SwiperSlide key={index}>
-                <div className={homeStyles.product__card} style={selectedProductStyle(index)} onClick={()=>{navigate("/store/detail/"+product.id+"/"+product.category, { replace: false })}}>
+                <IconButton color="primary" aria-label="add to shopping cart" className={homeStyles.add__button} onClick={() => {
+                  addProduct(1, product)
+                }}>
+                  <AddShoppingCartIcon />
+                </IconButton>
+                <a href={'/store/detail/' + product.id + '/' + product.category} className={homeStyles.product__card} style={selectedProductStyle(index)}>
                   <Stack direction="column" justifyContent="start" alignItems="center" spacing={1}>
                     <div className={homeStyles.product__image__container}>
                       <img alt='sd' src={product.image}
@@ -145,14 +153,13 @@ function Home() {
                     </Typography>
                     <div>
                       <Typography variant="p" fontSize={22} fontWeight={500} component="article" >
-                        {product.price}$ <IconButton color="primary" aria-label="add to shopping cart">
-                          <AddShoppingCartIcon />
-                        </IconButton>
+                      ${product.price.toFixed(2)}
                       </Typography>
 
                     </div>
                   </Stack>
-                </div>
+                </a>
+
               </SwiperSlide>
             )
           }
@@ -165,8 +172,13 @@ function Home() {
         <Grid container spacing={2}>
           {
             productsCategoryOne.map(product =>
-              <Grid item xs={12} md={3} lg={3} justifyContent='center' key={product.id}>
-                <div className={homeStyles.second__product__card}>
+              <Grid item xs={12} md={3} lg={3} justifyContent='center' key={product.id} style={{ position: 'relative' }}>
+                <IconButton color="primary" aria-label="add to shopping cart" className={homeStyles.add__button__second} onClick={() => {
+                  addProduct(1, product)
+                }}>
+                  <AddShoppingCartIcon />
+                </IconButton>
+                <a href={'/store/detail/' + product.id + '/' + product.category} className={homeStyles.second__product__card} >
                   <Stack direction="column" justifyContent="start" alignItems="center" spacing={1}>
                     <div className={homeStyles.product__image__container}>
                       <img alt='sd' src={product.image}
@@ -178,13 +190,12 @@ function Home() {
                     </Typography>
                     <div>
                       <Typography variant="p" fontSize={22} fontWeight={500} component="article" >
-                        {product.price}$ <IconButton color="primary" aria-label="add to shopping cart">
-                          <AddShoppingCartIcon />
-                        </IconButton>
+                      ${product.price.toFixed(2)}
+
                       </Typography>
                     </div>
                   </Stack>
-                </div>
+                </a>
               </Grid>
             )
           }
@@ -194,11 +205,12 @@ function Home() {
         <Typography variant="h5" fontWeight={600} component="h2" className={homeStyles.main__text}>
           Categoria 2
         </Typography>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} >
           {
             productsCategoryTwo.map(product =>
-              <Grid item xs={12} md={3} lg={3} justifyContent='center' key={product.id}>
-                <div className={homeStyles.second__product__card}>
+              <Grid item xs={12} md={3} lg={3} justifyContent='center' style={{ position: 'relative' }} key={product.id} >
+
+                <a href={'/store/detail/' + product.id + '/' + product.category} className={homeStyles.second__product__card} >
                   <Stack direction="column" justifyContent="start" alignItems="center" spacing={1}>
                     <div className={homeStyles.product__image__container}>
                       <img alt='sd' src={product.image}
@@ -210,13 +222,16 @@ function Home() {
                     </Typography>
                     <div>
                       <Typography variant="p" fontSize={22} fontWeight={500} component="article" >
-                        {product.price}$ <IconButton color="primary" aria-label="add to shopping cart">
-                          <AddShoppingCartIcon />
-                        </IconButton>
+                      ${product.price.toFixed(2)}
                       </Typography>
                     </div>
                   </Stack>
-                </div>
+                </a>
+                <IconButton color="primary" aria-label="add to shopping cart" className={homeStyles.add__button__second} onClick={() => {
+                  addProduct(1, product)
+                }}>
+                  <AddShoppingCartIcon />
+                </IconButton>
               </Grid>
             )
           }

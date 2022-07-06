@@ -29,10 +29,15 @@ export const submitRegister = (props) => {
         setOpen(true)
     })
 }
-export const getUserDetails = ({ setUserName }) => {
+export const getUserDetails = ({ setUserName, setUserId }) => {
     const userDetailsUrl = getApiUrl('auth/userDetails')
     axios.get(userDetailsUrl, { withCredentials: true }).then(userDetails => {
         setUserName(userDetails.data.userName)
+        setUserId(userDetails.data.id)
+        const cartListCountUrl = getApiUrl(`shoppingList/count/${userDetails.data.id}`)
+        axios.get(cartListCountUrl, { withCredentials: true }).then((response) => {
+            localStorage.setItem("number", response.data.toString())
+        })
     })
 }
 export const logout = ({ navigate }) => {
