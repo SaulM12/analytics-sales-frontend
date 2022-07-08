@@ -21,6 +21,7 @@ import { logout } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import { Bar } from 'react-chartjs-2';
+import { getTotalSalesByCategory, getTotalSalesByMonth, getLeastSoldProducts, getMostSoldProducts, getTotalSalesByMonthAndCategory } from '../services/sales';
 function Admin() {
   var navigate = useNavigate()
   const [product, setProduct] = React.useState({ name: "", price: 0, description: "", category: "", image: "" })
@@ -34,12 +35,21 @@ function Admin() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [value, setValue] = React.useState('female');
+  const [productsAsArray, setProductsAsArray] = React.useState([])
+  const [productsAsObject, setProductsAsObject] = React.useState({})
   const titleRef = useRef()
   const getProductList = () => {
     getAllProducts({ setProductList })
   }
   useEffect(() => {
     getProductList()
+    getTotalSalesByMonthAndCategory().then((data => {
+      setProductsAsArray(data)
+    }))
+    getMostSoldProducts().then((data) => {
+      console.log(data);
+      setProductsAsObject(data)
+    })
   }, []);
   ChartJS.register(
     CategoryScale,
@@ -121,7 +131,7 @@ function Admin() {
     }
     e.target.value = null
   }
-  const openModatToEdit = (productToEdit) => {
+  const openModalToEdit = (productToEdit) => {
     setProduct(productToEdit)
     setOpenModal(true)
     setEdit(true)
@@ -141,21 +151,37 @@ function Admin() {
       },
       title: {
         display: true,
-        text: 'Chart.js Bar Chart',
+        text: 'CAMBIAR TÍTULO',
       },
     },
   };
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
- const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Ventas',
-      data: [1,2,3,4,5,6,7],
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    }
-  ],
-};
+  const labels = productsAsArray.map(data => data.month);
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Ropa',
+        data: productsAsArray.map(data => data.clothes),
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      },
+      {
+        label: 'Tecnología',
+        data: productsAsArray.map(data => data.technology),
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  };
+  /*   const labels = Object.keys(test)
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: 'Productos más vendidos',
+          data: Object.values(test).sort((a, b) => b - a),
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        }
+      ],
+    }; */
   return (
     <div className={adminStyles.container}>
       <Snackbar open={showAlert.show} autoHideDuration={3000} onClose={closeAlert}
@@ -201,14 +227,7 @@ function Admin() {
       </div>
       <Grid container spacing={2} className={adminStyles.dashboard}>
         <Grid item xs={12} md={9} className={adminStyles.bar__container}>
-          <Bar
-            options={
-              options
-            }
-            data={
-              data
-            }
-          />
+          <Bar options={options} data={data} />
         </Grid>
         <Grid item xs={12} md={3}>
           <div className={adminStyles.bar__container}>
@@ -264,7 +283,7 @@ function Admin() {
                     <TableCell component="th" align="left">{productItem.description}</TableCell>
                     <TableCell component="th" align="right">
                       <IconButton color="primary" aria-label="add to shopping cart" onClick={() => {
-                        openModatToEdit(productItem)
+                        openModalToEdit(productItem)
                       }}>
                         <EditIcon />
                       </IconButton>
