@@ -171,13 +171,13 @@ function Admin() {
       },
     ],
   };
-  /*   const labels = Object.keys(test)
+  /*   const labels = Object.keys(productsAsObject)
     const data = {
       labels,
       datasets: [
         {
           label: 'Productos más vendidos',
-          data: Object.values(test).sort((a, b) => b - a),
+          data: Object.values(productsAsObject).sort((a, b) => b - a),
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         }
       ],
