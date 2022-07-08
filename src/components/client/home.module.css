@@ -142,7 +142,7 @@
     position: absolute!important;
     z-index: 2!important;
     top: 9%;
-    right: 14%;
+    right: 10%;
     background-color: rgba(154, 248, 255, 0.404)!important;
 }
 .product__card{
@@ -153,7 +153,7 @@
     margin: 0.5rem;
     width: 12rem;
     padding: 1rem;
-    height: 13rem;
+    min-height: 13rem;
     border: 2px solid rgba(78, 78, 78, 0.13);
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: 4%;
@@ -188,7 +188,7 @@
     text-decoration: none;
     position: relative;
     margin: 0.5rem;
-    width: 12rem;
+    width: 75%;
     padding: 1rem;
     min-height: 12rem;
     border: 2px solid rgba(78, 78, 78, 0.13);

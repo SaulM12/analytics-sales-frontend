@@ -5,7 +5,11 @@
     justify-content: center;
     align-items: flex-start;
 }
-
+@media only screen and (max-width: 600px) {
+    .field{
+        margin-top: 0.6rem!important;
+    }
+}
 .detail__card {
     min-width: 60%;
     min-height: 10vh;
@@ -28,10 +32,12 @@
 
 .products_container {
     min-width: 80%;
+    margin-top: 1rem!important;
+    border-top: 2px rgba(153, 153, 153, 0.068) solid;
 }
 
 .product_card {
-    margin-top: 0.5rem;
+    margin-top: 0.4rem!important;
     display: flex;
     justify-content: space-between;
     min-width: 90%;
@@ -49,4 +55,10 @@
     margin-top: 1rem!important;
     height: 3rem!important;
     font-size: 17px!important;
+}
+.confirm_container{
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

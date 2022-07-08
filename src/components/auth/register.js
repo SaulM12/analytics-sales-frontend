@@ -61,7 +61,7 @@ function Register() {
             </Button>
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
-              <Alert onClose={handleClose} severity={wrongData.status ? "error" : "success"} a sx={{ width: '100%' }}>
+              <Alert onClose={handleClose} severity={wrongData.status ? "error" : "success"} sx={{ width: '100%' }}>
                 {wrongData.status ? wrongData.infoText : "Inicia sesión para continuar"}
               </Alert>
             </Snackbar>

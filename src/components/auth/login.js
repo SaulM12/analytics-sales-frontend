@@ -50,7 +50,7 @@ function Login() {
                     </Button>
                     <Snackbar open={wrongCredentials.wrongData} autoHideDuration={3000} onClose={handleClose}
                         anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
-                        <Alert onClose={handleClose} severity="error" a sx={{ width: '100%' }}>
+                        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
                         {wrongCredentials.infoText}
                         </Alert>
                     </Snackbar>

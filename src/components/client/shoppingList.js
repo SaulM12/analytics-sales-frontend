@@ -1,4 +1,4 @@
-import { Alert, Button, IconButton, Snackbar, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Grid, IconButton, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import listStyle from './shoppingList.module.css'
 import { getShoppingList, deleteShoppingItem } from '../services/detail';
@@ -28,18 +28,25 @@ function ShoppingList() {
   }
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-        return;
+      return;
     }
     showSuccess(false);
-};
+  };
   const confirmSale = () => {
-    generateSale({userMail}).then(response => {
+    generateSale({ userMail }).then(response => {
       localStorage.setItem("number", "0")
       window.dispatchEvent(new Event('storage'))
       setMessage(response.data.message)
       setSuccess(true)
       getShoppingList({ setProductList, setUserName, setUserMail })
     })
+  }
+  const calculateTotal = (details) => {
+    let total = 0
+    details.forEach(detail => {
+      total = total + (detail.amount * detail.product.price)
+    });
+    return total
   }
   return (
     <div className={listStyle.container}>
@@ -48,19 +55,19 @@ function ShoppingList() {
           Detalle de compra
         </Typography>
         <div className={listStyle.user__info}>
-          <TextField
+          <TextField className={listStyle.field}
             disabled
             id="outlined-"
             label="Nombre"
             value={userName !== "" && userName}
           />
-          <TextField
+          <TextField className={listStyle.field}
             disabled
             id="outlined-"
             label="Email"
             value={userMail !== "" && userMail}
           />
-          <TextField
+          <TextField className={listStyle.field}
             disabled
             id="outlined-disabled"
             label="Fecha"
@@ -69,31 +76,55 @@ function ShoppingList() {
         </div>
         <Stack spacing={0} className={listStyle.products_container}>
           {productList.map((detail, index) =>
-            <div className={listStyle.product_card} key={index}>
-              <img alt={detail.product.name} src={detail.product.image} className={listStyle.product_image} />
-              <Typography variant="p" fontSize={20} color={'#333333'} fontWeight={400} component="h2">
-                {detail.product.name}
-              </Typography>
-              <Typography variant="p" fontSize={20} color={'#333333'} fontWeight={400} component="h2">
-                {detail.amount}
-              </Typography>
-              <Typography variant="p" fontSize={20} color={'#333333'} fontWeight={400} component="h2">
-                ${detail.product.price}
-              </Typography>
-              <Typography variant="p" fontSize={20} fontWeight={700} component="h2">
-                ${detail.product.price * detail.amount}
-              </Typography>
-              <IconButton color="error" aria-label="add to shopping cart" onClick={() => { deleteItem(detail.id) }}>
-                <DeleteForeverIcon />
-              </IconButton>
-            </div>
+            <Grid container spacing={2} className={listStyle.product_card} key={index}>
+              <Grid item xs={3} md={2} >
+                <img alt={detail.product.name} src={detail.product.image} className={listStyle.product_image} />
+              </Grid>
+              <Grid item xs={6} md={3}>
+                <Typography variant="p" fontSize={20} color={'#333333'} fontWeight={400} component="h2">
+                  {detail.product.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={2} md={1}>
+                <Typography variant="p" fontSize={20} color={'#333333'} fontWeight={400} component="h2">
+                  {detail.amount}
+                </Typography>
+              </Grid>
+              <Grid item xs={3} md={2}>
+                <Typography variant="p" fontSize={20} color={'#333333'} fontWeight={400} component="h2">
+                  ${detail.product.price}
+                </Typography>
+              </Grid>
+              <Grid item xs={6} md={2}>
+                <Typography variant="p" fontSize={20} fontWeight={700} component="h2">
+                  ${(detail.product.price * detail.amount).toFixed(2)}
+                </Typography>
+              </Grid>
+              <Grid item xs={2} md={1}>
+                <IconButton color="error" aria-label="add to shopping cart" onClick={() => { deleteItem(detail.id) }}>
+                  <DeleteForeverIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
           )}
         </Stack>
-        <Button variant="contained" color='success' className={listStyle.confirm} endIcon={<SendIcon />}
-        onClick={()=>{
-          confirmSale()
-        }}>
-          Confirmar compra</Button>
+        {productList.length ? 
+        <div className={listStyle.confirm_container}>
+          <Typography variant="p" fontSize={20} color={'black'} fontWeight={600} component="h2">
+            Total a pagar: ${calculateTotal(productList).toFixed(2)}
+          </Typography>
+          <Button variant="contained" color='success' className={listStyle.confirm} endIcon={<SendIcon />}
+          onClick={() => {
+            confirmSale()
+          }}>
+          Confirmar compra</Button> 
+          
+        </div>
+          :
+          <Typography variant="p" fontSize={20} color={'#333333'} fontWeight={400} component="h2">
+            Aun no has añadido ningún producto.
+          </Typography>
+        }
       </div>
       <Snackbar open={showSuccess} autoHideDuration={3000} onClose={handleClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >

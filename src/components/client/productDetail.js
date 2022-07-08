@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import { getProductById, getRelatedProductsByCategory } from '../services/product';
 import { addToCart } from '../services/detail';
 function ProductDetail() {
-    const [amount, setAmount] = React.useState(0)
+    const [amount, setAmount] = React.useState(1)
     var { id } = useParams();
     var { category } = useParams();
     var [relatedProducts, setRelatedProducts] = React.useState([])
@@ -65,7 +65,7 @@ function ProductDetail() {
                     </div>
                     <div className={detailStyle.desc__container}>
                         <IconButton color="primary" aria-label="add to shopping cart" onClick={subtract}
-                            disabled={amount === 0}>
+                            disabled={amount === 1}>
                             <RemoveIcon />
                         </IconButton>
                         <span className={detailStyle.amount__input}>{amount}</span>
