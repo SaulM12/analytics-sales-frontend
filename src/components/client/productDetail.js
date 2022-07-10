@@ -1,4 +1,4 @@
-import { Button, Chip, Divider, Grid, IconButton, Stack, Typography } from '@mui/material'
+import { Alert, Button, Chip, Divider, Grid, IconButton, Snackbar, Stack, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import detailStyle from './productDetail.module.css'
 import AddIcon from '@mui/icons-material/Add';
@@ -14,7 +14,7 @@ function ProductDetail() {
     var { category } = useParams();
     var [relatedProducts, setRelatedProducts] = React.useState([])
     var [product, setProduct] = React.useState(null)
-
+    const [showConfirm, setShowConfirm] = React.useState(false)
     useEffect(() => {
         let shouldUpdate = true;
         if (shouldUpdate) {
@@ -42,8 +42,14 @@ function ProductDetail() {
         setAmount(amount - 1)
     }
     const addProduct = (amountToAdd, productToAdd) => {
-        addToCart({ amountToAdd, productToAdd })
+        addToCart({ amountToAdd, productToAdd, setShowConfirm })
     }
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setShowConfirm(false);
+    };
     return (
         <Grid container direction="row" justifyContent="space-between" alignItems="flex-start" className={detailStyle.container}>
             <Grid item sm={12} md={6} lg={6}>
@@ -94,7 +100,7 @@ function ProductDetail() {
                                     <Typography variant="p" fontSize={20} fontWeight={500} component="article"  >
                                         {product.name}
                                     </Typography>
-                                    <IconButton aria-label="add to shopping cart">
+                                    <IconButton aria-label="add to shopping cart" href={'/store/detail/' + product.id + '/' + product.category}>
                                         <RemoveRedEyeIcon />
                                     </IconButton>
                                 </div>
@@ -125,6 +131,12 @@ function ProductDetail() {
                     }
                 </div>
             </Grid>
+            <Snackbar open={showConfirm} autoHideDuration={1500} onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Producto añadido
+                </Alert>
+            </Snackbar>
         </Grid>
     )
 }

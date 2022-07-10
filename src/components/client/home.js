@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Grid, IconButton, Stack, Typography } from '@mui/material'
+import { Button, Grid, IconButton, Stack, Typography, Alert, Snackbar } from '@mui/material'
 import homeStyles from './home.module.css'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -14,6 +14,7 @@ function Home() {
   const [productsLessPrice, setProductsLessPrice] = useState([])
   const [productsCategoryOne, setProductsCategoryOne] = useState([])
   const [productsCategoryTwo, setProductsCategoryTwo] = useState([])
+  const [showConfirm, setShowConfirm] = useState(false)
   useEffect(() => {
     let shouldUpdate = true;
     if (shouldUpdate) {
@@ -57,8 +58,14 @@ function Home() {
     }
   }
   const addProduct = (amountToAdd, productToAdd) => {
-    addToCart({ amountToAdd, productToAdd })
+    addToCart({ amountToAdd, productToAdd,setShowConfirm })
   }
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    setShowConfirm(false);
+};
   return (
     <div className={homeStyles.container}>
       <Grid container direction="row" justifyContent="center" alignItems="center" className={homeStyles.banner}>
@@ -153,7 +160,7 @@ function Home() {
                     </Typography>
                     <div>
                       <Typography variant="p" fontSize={22} fontWeight={500} component="article" >
-                      ${product.price.toFixed(2)}
+                        ${product.price.toFixed(2)}
                       </Typography>
 
                     </div>
@@ -167,7 +174,7 @@ function Home() {
       </div>
       <div className={homeStyles.product__list}>
         <Typography variant="h5" fontWeight={600} component="h2" className={homeStyles.main__text}>
-          Categoria 1
+          Productos de Ropa
         </Typography>
         <Grid container spacing={2}>
           {
@@ -190,7 +197,7 @@ function Home() {
                     </Typography>
                     <div>
                       <Typography variant="p" fontSize={22} fontWeight={500} component="article" >
-                      ${product.price.toFixed(2)}
+                        ${product.price.toFixed(2)}
 
                       </Typography>
                     </div>
@@ -203,7 +210,7 @@ function Home() {
       </div>
       <div className={homeStyles.product__list}>
         <Typography variant="h5" fontWeight={600} component="h2" className={homeStyles.main__text}>
-          Categoria 2
+          Productos de Tecnología
         </Typography>
         <Grid container spacing={2} >
           {
@@ -222,7 +229,7 @@ function Home() {
                     </Typography>
                     <div>
                       <Typography variant="p" fontSize={22} fontWeight={500} component="article" >
-                      ${product.price.toFixed(2)}
+                        ${product.price.toFixed(2)}
                       </Typography>
                     </div>
                   </Stack>
@@ -237,6 +244,12 @@ function Home() {
           }
         </Grid>
       </div>
+      <Snackbar open={showConfirm} autoHideDuration={1500} onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Producto añadido
+        </Alert>
+      </Snackbar>
     </div>
   )
 }

@@ -12,7 +12,7 @@ export const generateSale = ({ id, product }) => {
         })
 }
 export const addToCart=(props)=>{
-    const{amountToAdd, productToAdd} = props
+    const{amountToAdd, productToAdd, setShowConfirm} = props
     const addToCartUrl = getApiUrl(`shoppingList`)
     const userDetailsUrl = getApiUrl('auth/userDetails')
     axios.get(userDetailsUrl, { withCredentials: true }).then(userDetails => {
@@ -21,11 +21,12 @@ export const addToCart=(props)=>{
             product:productToAdd,
             amount:amountToAdd
         }
-        axios.post(addToCartUrl,cartObject,{withCredentials: true}).then(res => {
+        axios.post(addToCartUrl,cartObject,{withCredentials: true}).then(() => {
+            setShowConfirm(true)
             let number= parseInt(localStorage.getItem("number"))+1
             localStorage.setItem("number",number.toString())
             window.dispatchEvent( new Event('storage') )
-            console.log(res.data.message);
+            window.dispatchEvent( new Event('storage') )
         })
         .catch(error => {
             console.log(error.response.data.message);

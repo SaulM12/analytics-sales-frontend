@@ -8,11 +8,13 @@ import Typography from '@mui/material/Typography';
 import { Alert, Snackbar } from '@mui/material';
 import { submitLogin } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
-
+import LoadingButton from '@mui/lab/LoadingButton';
 function Login() {
     var navigate = useNavigate()
     const [loginData, setLoginData] = useState({ email: "", password: "" })
     const [wrongCredentials, setWrongCredentials] = useState({ wrongData: false, infoText: '', })
+    const [loading, setLoading] = useState(false)
+    const [open, setOpen] = useState(false);
     const handleLogin = e => {
         const tempData = { ...loginData }
         tempData[e.target.id] = e.target.value
@@ -22,7 +24,7 @@ function Login() {
         if (reason === 'clickaway') {
             return;
         }
-        setWrongCredentials(false);
+        setOpen(false);
     };
 
     return (
@@ -39,19 +41,23 @@ function Login() {
                         onChange={e => handleLogin(e)} />
                     <TextField id="password" type='password' label="Contraseña" variant="filled" value={loginData.password}
                         onChange={e => handleLogin(e)} />
-                    <Button
-                        variant="contained"
-                        className={loginStyles.button}
-                        onClick={() => submitLogin({ loginData, setWrongCredentials, navigate })}>
+                    {loading ? <LoadingButton loading variant="contained">
                         Iniciar Sesión
-                    </Button>
+                    </LoadingButton> :
+                        <Button
+                            variant="contained"
+                            className={loginStyles.button}
+                            onClick={() => submitLogin({ loginData, setWrongCredentials, navigate, setLoading, setOpen })}>
+                            Iniciar Sesión
+                        </Button>
+                    }
                     <Button variant="text" href="/register" >
                         Registrarse
                     </Button>
-                    <Snackbar open={wrongCredentials.wrongData} autoHideDuration={3000} onClose={handleClose}
+                    <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}
                         anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
                         <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                        {wrongCredentials.infoText}
+                            {wrongCredentials.infoText}
                         </Alert>
                     </Snackbar>
                 </Stack>

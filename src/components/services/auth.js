@@ -2,30 +2,38 @@ import { getApiUrl } from "./apiConfig";
 import axios from 'axios';
 
 export const submitLogin = (props) => {
-    const { loginData, setWrongCredentials, navigate } = props
+    const { loginData, setWrongCredentials, navigate, setLoading, setOpen } = props
+    setLoading(true)
     const loginUrl = getApiUrl('auth/login')
     const userDetailsUrl = getApiUrl('auth/userDetails')
     axios.post(loginUrl, loginData, { withCredentials: true })
         .then(() => {
             axios.get(userDetailsUrl, { withCredentials: true }).then(userDetails => {
                 let userRole = userDetails.data.roles[0].roleName
+                setLoading(false)
+                setOpen(true)
                 navigate(userRole === 'ROLE_ADMIN' ? '/admin' : '/store', { replace: true })
             })
         })
         .catch(error => {
+            setLoading(false)
             setWrongCredentials({ wrongData: true, infoText: error.response.data.message })
+            setOpen(true)
         })
 }
 
 export const submitRegister = (props) => {
-    const { registerData, setWrongData, setRegisterData, setOpen } = props;
+    const { registerData, setWrongData, setRegisterData, setOpen, setLoading } = props;
+    setLoading(true)
     const registerUrl = getApiUrl('auth/register')
     axios.post(registerUrl, registerData).then(response => {
         setRegisterData({ userName: "", email: "", password: "" })
         setWrongData({ status: false, infoText: response.data.message })
+        setLoading(false)
         setOpen(true)
     }).catch(error => {
         setWrongData({ status: true, infoText: error.response.data.message })
+        setLoading(false)
         setOpen(true)
     })
 }

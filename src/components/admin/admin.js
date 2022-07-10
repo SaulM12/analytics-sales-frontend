@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import { Bar } from 'react-chartjs-2';
 import { getTotalSalesByCategory, getTotalSalesByMonth, getLeastSoldProducts, getMostSoldProducts, getTotalSalesByMonthAndCategory } from '../services/sales';
+import LoadingButton from '@mui/lab/LoadingButton';
 function Admin() {
   var navigate = useNavigate()
   const [product, setProduct] = React.useState({ name: "", price: 0, description: "", category: "", image: "" })
@@ -33,10 +34,12 @@ function Admin() {
   const [showAlert, setShowAlert] = React.useState({ show: false, message: '', severity: 'success' });
   const [productList, setProductList] = React.useState([])
   const [page, setPage] = React.useState(0);
+  const [otherData, setOtherData] = React.useState({});
+  const [filtered, setFiltered] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [value, setValue] = React.useState('female');
+  const [value, setValue] = React.useState('monthAndCategory');
   const [productsAsArray, setProductsAsArray] = React.useState([])
-  const [productsAsObject, setProductsAsObject] = React.useState({})
+  const [loading, setLoading] = React.useState(false)
   const titleRef = useRef()
   const getProductList = () => {
     getAllProducts({ setProductList })
@@ -44,13 +47,11 @@ function Admin() {
   useEffect(() => {
     getProductList()
     getTotalSalesByMonthAndCategory().then((data => {
+      console.log(data)
       setProductsAsArray(data)
     }))
-    getMostSoldProducts().then((data) => {
-      console.log(data);
-      setProductsAsObject(data)
-    })
   }, []);
+
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -87,18 +88,22 @@ function Admin() {
     setProductFeedback(false);
   };
   const saveNewProduct = () => {
+    setLoading(true)
     createProduct({ product }).then(response => {
       setWrongProduct({ status: false, infoText: response.data.message })
       setProduct({ name: "", price: 0, description: "", category: "", image: "" })
       setProductFeedback(true)
+      setLoading(false)
       getProductList()
     })
       .catch(error => {
         setWrongProduct({ status: true, infoText: error.response.data.message })
         setProductFeedback(true)
+        setLoading(false)
       })
   }
   const editExitingProduct = () => {
+    setLoading(true)
     updateProduct({ product, productId }).then(response => {
       setWrongProduct({ status: false, infoText: response.data.message })
       setProductFeedback(true)
@@ -106,10 +111,12 @@ function Admin() {
       getProductList()
       setProduct({ name: "", price: 0, description: "", category: "", image: "" })
       setEdit(false)
+      setLoading(false)
     })
       .catch(error => {
         setWrongProduct({ status: true, infoText: error.response.data.message })
         setProductFeedback(true)
+        setLoading(false)
       })
   }
   const saveProduct = () => {
@@ -142,46 +149,69 @@ function Admin() {
   }
   const handleFilterChange = (event) => {
     setValue(event.target.value);
+    let filters = {
+      category: getTotalSalesByCategory(), monthAndCategory: getTotalSalesByMonthAndCategory(), top: getMostSoldProducts(), less: getLeastSoldProducts(),
+      month: getTotalSalesByMonth()
+    }
+    let filterFuntion = filters[event.target.value]
+    setFiltered(event.target.value !== 'monthAndCategory' ? true : false)
+    filterFuntion.then(productsToShow => {
+      const sortable = Object.entries(productsToShow)
+        .sort(([, a], [, b]) => event.target.value !== 'less' ? b - a : a - b)
+        .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+      let labelsO = Object.keys(sortable)
+      setOtherData({
+        labels: labelsO,
+        datasets: [
+          {
+            data: Object.values(sortable),
+            backgroundColor: [
+              '#083554',
+              '#2c83c6',
+              '#39a8f0',
+              '#62beef',
+              '#a6d4ec',
+              '#e3e3e3',
+              '#e1a793',
+              '#dd6d55',
+              '#dd6d55',
+              '#e24c33',
+              '#c23726'
+            ]
+          }
+        ]
+      })
+    })
   };
   const options = {
     responsive: true,
     plugins: {
       legend: {
         position: 'top',
+        display: !filtered
       },
       title: {
         display: true,
-        text: 'CAMBIAR TÍTULO',
+        text: 'Reporte de ventas',
       },
     },
   };
-  const labels = productsAsArray.map(data => data.month);
+  const labels = productsAsArray.map((productLabel) => productLabel.month);
   const data = {
     labels,
     datasets: [
       {
         label: 'Ropa',
-        data: productsAsArray.map(data => data.clothes),
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        data: productsAsArray.map(firstCategoryData => firstCategoryData.clothes),
+        backgroundColor: '#083554',
       },
       {
         label: 'Tecnología',
-        data: productsAsArray.map(data => data.technology),
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        data: productsAsArray.map(secondCategoryData => secondCategoryData.technology),
+        backgroundColor: '#2c83c6',
       },
     ],
   };
-  /*   const labels = Object.keys(productsAsObject)
-    const data = {
-      labels,
-      datasets: [
-        {
-          label: 'Productos más vendidos',
-          data: Object.values(productsAsObject).sort((a, b) => b - a),
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        }
-      ],
-    }; */
   return (
     <div className={adminStyles.container}>
       <Snackbar open={showAlert.show} autoHideDuration={3000} onClose={closeAlert}
@@ -227,22 +257,23 @@ function Admin() {
       </div>
       <Grid container spacing={2} className={adminStyles.dashboard}>
         <Grid item xs={12} md={9} className={adminStyles.bar__container}>
-          <Bar options={options} data={data} />
+          {filtered ? <Bar options={options} data={otherData} /> :
+            <Bar options={options} data={data} />}
         </Grid>
         <Grid item xs={12} md={3}>
-          <div className={adminStyles.bar__container}>
+          <div className={adminStyles.filter__container}>
             <FormControl>
-              <FormLabel id="demo-controlled-radio-buttons-group"><h1>Filtros</h1></FormLabel>
+              <FormLabel id="demo-controlled-radio-buttons-group" className={adminStyles.filter__title}>Filtros</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-controlled-radio-buttons-group"
                 name="controlled-radio-buttons-group"
                 value={value}
-                onChange={handleFilterChange}
-              >
-                <FormControlLabel value="female" control={<Radio />} label="Productos más vendidos " />
-                <FormControlLabel value="male" control={<Radio />} label="Ventas por categoria" />
-                <FormControlLabel value="male2" control={<Radio />} label="Ventas por temporada" />
-                <FormControlLabel value="male6" control={<Radio />} label="Productos menos vendidos" />
+                onChange={handleFilterChange}>
+                <FormControlLabel value="monthAndCategory" control={<Radio />} label="Ventas por temporada y categoria" />
+                <FormControlLabel value="category" control={<Radio />} label="Ventas por categoria" />
+                <FormControlLabel value="month" control={<Radio />} label="Ventas por mes" />
+                <FormControlLabel value="top" control={<Radio />} label="Productos más vendidos " />
+                <FormControlLabel value="less" control={<Radio />} label="Productos menos vendidos" />
               </RadioGroup>
             </FormControl>
           </div>
@@ -370,11 +401,13 @@ function Admin() {
               onChange={e => handleProductForm(e)}
               value={product.image}
             />
-            <Button className={adminStyles.actions}
-              variant="contained"
-              id="button" onClick={saveProduct}>
-              Guardar
-            </Button>
+            {loading ? <LoadingButton loading variant="contained" className={adminStyles.actions} />
+              :
+              <Button className={adminStyles.actions}
+                variant="contained"
+                id="button" onClick={saveProduct}>
+                Guardar
+              </Button>}
             <Button className={adminStyles.actions}
               variant="outlined"
               id="button"

@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { submitRegister } from '../services/auth';
 import { Alert, Snackbar } from '@mui/material';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+import LoadingButton from '@mui/lab/LoadingButton';
 function Register() {
 
   const [registerData, setRegisterData] = useState({
@@ -14,13 +15,12 @@ function Register() {
     email: "",
     password: ""
   })
-
   const [open, setOpen] = useState(false);
-
   const [wrongData, setWrongData] = useState({
     status: null,
     infoText: ''
   })
+  const [loading, setLoading] = useState(false)
   const handleRegister = e => {
     const tempData = { ...registerData }
     tempData[e.target.id] = e.target.value
@@ -32,8 +32,8 @@ function Register() {
     }
     setOpen(false);
   };
-  const register=()=>{
-    submitRegister({ registerData, setWrongData, setRegisterData,setOpen })
+  const register = () => {
+    submitRegister({ registerData, setWrongData, setRegisterData, setOpen, setLoading })
   }
   return (
     <div className={registerStyles.container}>
@@ -46,16 +46,17 @@ function Register() {
         </Stack>
         <form>
           <Stack spacing={2} alignItems="center" justifyContent="center">
-
             <TextField id="userName" onChange={e => handleRegister(e)} value={registerData.userName} label="Nombre" variant="filled" />
             <TextField id="email" onChange={e => handleRegister(e)} value={registerData.email} label="Email" variant="filled" />
             <TextField id="password" onChange={e => handleRegister(e)} value={registerData.password} label="Contraseña" variant="filled" />
-            <Button
-              variant="contained"
-              className={registerStyles.button}
-              onClick={register}>
-              Registrarse
-            </Button>
+            {loading ? <LoadingButton loading variant="contained" className={registerStyles.button}/>
+              :
+              <Button
+                variant="contained"
+                className={registerStyles.button}
+                onClick={register}>
+                Registrarse
+              </Button>}
             <Button variant="text" href="/">
               Iniciar Sesión
             </Button>

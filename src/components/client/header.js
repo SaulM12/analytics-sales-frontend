@@ -22,7 +22,6 @@ function Header() {
   }
   useEffect(() => {
     getUserDetails({ setUserName, setUserId })
-
     let shouldUpdate = true;
     if (shouldUpdate) {
       getUserInfo()

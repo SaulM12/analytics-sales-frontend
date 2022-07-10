@@ -17,20 +17,15 @@ export const getAllSales = async () => {
 
 }
 
-export const getSalesByClientId = async (clientId) => {
-    try {
-        const saleUrl = getApiUrl(`sales/client/${clientId}`)
+export const getSalesByClient = async () => {
+        const saleUrl = getApiUrl(`sales/client`)
         const response = await axios.get(saleUrl, { withCredentials: true })
         return response.data
-    } catch (error) {
-        console.log(error.response.data.message);
-    }
 }
 
 export const getTotalSalesByCategory = async () => {
     const saleUrl = getApiUrl(`sales/totalByCategory`)
     const response = await axios.get(saleUrl, { withCredentials: true })
-    console.log(response.data);
     return response.data
 }
 
@@ -44,20 +39,17 @@ export const getTotalSalesByMonth = async () => {
 export const getMostSoldProducts = async () => {
     const saleUrl = getApiUrl(`sales/mostSoldProducts`)
     const response = await axios.get(saleUrl, { withCredentials: true })
-    console.log(response.data);
     return response.data
 }
 
 export const getLeastSoldProducts = async () => {
     const saleUrl = getApiUrl(`sales/leastSoldProducts`)
     const response = await axios.get(saleUrl, { withCredentials: true })
-    console.log(response.data);
     return response.data
 }
 
 export const getTotalSalesByMonthAndCategory = async () => {
     const saleUrl = getApiUrl(`sales/totalByMonthAndCategory`)
     const response = await axios.get(saleUrl, { withCredentials: true })
-    console.log(response.data);
     return response.data
 }
