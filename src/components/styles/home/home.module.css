@@ -4,9 +4,13 @@
     padding-left: 6rem;
     padding-right: 6rem;
     padding-top: 0rem;
-
+    background-color: #f2f7f6;
 }
+
+
+
 .banner{
+    
     min-height: auto;
     max-height: 100vh;
 }

@@ -52,8 +52,8 @@
 }
 .confirm{
     margin-top: 1rem!important;
-    height: 3rem!important;
     font-size: 17px!important;
+    width: 100%;
 }
 .confirm_container{
     margin-top: 1rem;

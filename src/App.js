@@ -2,11 +2,12 @@ import './App.css';
 import { Routes, Route } from "react-router-dom";
 import Login from './components/auth/login';
 import Register from './components/auth/register';
-import Home from './components/client/home'
+import Home from './components/client/home/home';
 import Client from './components/client/client'
-import ProductDetail from './components/client/productDetail';
 import Admin from './components/admin/admin'
-import ShoppingList from './components/client/shoppingList';
+import ProductDetail from './components/client/productDetail/productDetail';
+import ShoppingList from './components/client/addedToCart/shoppingList';
+import MyPurchases from './components/client/myPurchases/myPurchases';
 function App() {
   return (
     <Routes>
@@ -16,6 +17,7 @@ function App() {
         <Route path="" element={<Home />} />
         <Route path="detail/:id/:category" element={<ProductDetail />} />
         <Route path="shopping/:id" element={<ShoppingList />} />
+        <Route path="myPurchases" element={<MyPurchases />} />
       </Route>
       <Route path="admin" element={<Admin />} />
     </Routes>

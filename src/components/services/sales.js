@@ -1,7 +1,7 @@
 import { getApiUrl } from "./apiConfig";
 import axios from "axios";
 
-export const generateSale = ({ userMail }) => {
+export const generateSale = (userMail) => {
     const saleUrl = getApiUrl(`sales/create/${userMail}`)
     return axios.post(saleUrl, { withCredentials: true })
 }
@@ -18,9 +18,9 @@ export const getAllSales = async () => {
 }
 
 export const getSalesByClient = async () => {
-        const saleUrl = getApiUrl(`sales/client`)
-        const response = await axios.get(saleUrl, { withCredentials: true })
-        return response.data
+    const saleUrl = getApiUrl(`sales/client`)
+    const response = await axios.get(saleUrl, { withCredentials: true })
+    return response.data
 }
 
 export const getTotalSalesByCategory = async () => {
