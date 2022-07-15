@@ -1,1 +1,1 @@
-export const getApiUrl = path => `http://localhost:8090/${path}`
+export const getApiUrl = path => `salesApi.com:8083/${path}`
