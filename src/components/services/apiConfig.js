@@ -1,1 +1,1 @@
-export const getApiUrl = path => `http://sales.api.com:8083/${path}`
+export const getApiUrl = path => `http://api.ecommerce.test.com:8083/${path}`
