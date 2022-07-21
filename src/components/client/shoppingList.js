@@ -164,7 +164,6 @@ function ShoppingList() {
                   <ShoppingBasketIcon sx={{ fontSize: 35, marginLeft: 1 }} color="success" />
                 </div>
                 <div className={listStyle.item__purchases}>
-
                   <Typography variant="h6" color={'#333333'} fontWeight={500} component="h2">
                     Fecha: {new Date(purchase.date).getDate() + "/" + new Date(purchase.date).getMonth() + "/" + new Date(purchase.date).getFullYear()}
                   </Typography>
