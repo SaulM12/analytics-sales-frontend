@@ -8,8 +8,9 @@ import { submitRegister } from '../services/auth';
 import { Alert, Snackbar } from '@mui/material';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useNavigate } from 'react-router-dom';
 function Register() {
-
+  const navigate = useNavigate()
   const [registerData, setRegisterData] = useState({
     userName: "",
     email: "",
@@ -33,7 +34,7 @@ function Register() {
     setOpen(false);
   };
   const register = () => {
-    submitRegister({ registerData, setWrongData, setRegisterData, setOpen, setLoading })
+    submitRegister({ registerData, setWrongData, setRegisterData, setOpen, setLoading, navigate })
   }
   return (
     <div className={registerStyles.container}>
@@ -48,7 +49,7 @@ function Register() {
           <Stack spacing={2} alignItems="center" justifyContent="center">
             <TextField id="userName" onChange={e => handleRegister(e)} value={registerData.userName} label="Nombre" variant="filled" />
             <TextField id="email" onChange={e => handleRegister(e)} value={registerData.email} label="Email" variant="filled" />
-            <TextField id="password" onChange={e => handleRegister(e)} value={registerData.password} label="Contraseña" variant="filled" />
+            <TextField id="password" type="password" onChange={e => handleRegister(e)} value={registerData.password} label="Contraseña" variant="filled" />
             {loading ? <LoadingButton loading variant="contained" className={registerStyles.button}/>
               :
               <Button
@@ -63,7 +64,7 @@ function Register() {
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
               <Alert onClose={handleClose} severity={wrongData.status ? "error" : "success"} sx={{ width: '100%' }}>
-                {wrongData.status ? wrongData.infoText : "Inicia sesión para continuar"}
+                {wrongData.status ? wrongData.infoText : "Registro exitoso, inicie sesión"}
               </Alert>
             </Snackbar>
           </Stack>

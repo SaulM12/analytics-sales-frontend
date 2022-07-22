@@ -21,16 +21,22 @@ export const submitLogin = (props) => {
             setOpen(true)
         })
 }
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
 
 export const submitRegister = (props) => {
-    const { registerData, setWrongData, setRegisterData, setOpen, setLoading } = props;
+    const { registerData, setWrongData, setRegisterData, setOpen, setLoading, navigate } = props;
     setLoading(true)
     const registerUrl = getApiUrl('auth/register')
     axios.post(registerUrl, registerData).then(response => {
         setRegisterData({ userName: "", email: "", password: "" })
         setWrongData({ status: false, infoText: response.data.message })
-        setLoading(false)
         setOpen(true)
+        sleep(2500).then(() => {
+            setLoading(false)
+            navigate('/', { replace: false })
+        });
     }).catch(error => {
         setWrongData({ status: true, infoText: error.response.data.message })
         setLoading(false)
@@ -45,6 +51,7 @@ export const getUserDetails = ({ setUserName, setUserId }) => {
         const cartListCountUrl = getApiUrl(`shoppingList/count/${userDetails.data.id}`)
         axios.get(cartListCountUrl, { withCredentials: true }).then((response) => {
             localStorage.setItem("number", response.data.toString())
+            window.dispatchEvent(new Event('storage'))
         })
     })
 }

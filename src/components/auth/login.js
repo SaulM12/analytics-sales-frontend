@@ -10,7 +10,7 @@ import { submitLogin } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 function Login() {
-    var navigate = useNavigate()
+    const navigate = useNavigate()
     const [loginData, setLoginData] = useState({ email: "", password: "" })
     const [wrongCredentials, setWrongCredentials] = useState({ wrongData: false, infoText: '', })
     const [loading, setLoading] = useState(false)
